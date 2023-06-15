@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\UserLoan\UserLoanHelper;
+use App\Http\Controllers\ApiResponse;
 
 class UserControllerV1 extends Controller
 {
@@ -13,27 +15,37 @@ class UserControllerV1 extends Controller
         try{
 
             $userId = $request->header('user_id');
-            $LoanAmount = $request->input('loan_amount');
+            $loanAmount = $request->input('loan_amount');
+            $term = $request->input('term');
 
-            $bookingData = \App\Order\Models\BookingModel\BookingHelper::getTicketDataByParams($offerId, $orderId);
-
-            $data = ['ticketData' => $bookingData];
+            $loanObject = new UserLoanHelper();
+            $loanId = $loanObject->createLoan($userId, $loanAmount, $term);
+            
+            $data = ['loan_id' => $loanId];
             return ApiResponse::returnData(['data' => $data]);
         } catch (\Throwable $e) {
-            Logger::error(__METHOD__ . "  execption", [
-                "error" => $e->getMessage(),
-                "file" => $e->getFile(),
-                "line" => $e->getLine(),
-                'parameters' => $request->all()
-            ]);
-            return ApiResponse::returnFailureWithHeaderCode($e->getMessage(), HTTP_STATUS_CODE_OK, $e->getCode());
+            
+            return ApiResponse::returnFailure($e->getMessage().' line'. $e->getLine());
         }
         
     }
     
     
-    public function ViewLoan(Request $request){
+    public function viewLoanList(Request $request){
         
+        try{
+
+            $userId = $request->header('user_id');
+
+            $loanObject = new UserLoanHelper();
+            $loanList = $loanObject->viewLoanList($userId);
+            
+            $data = ['loanList' => $loanList];
+            return ApiResponse::returnData(['data' => $data]);
+        } catch (\Throwable $e) {
+            
+            return ApiResponse::returnFailure($e->getMessage().' line'. $e->getLine());
+        }
     }
     
     

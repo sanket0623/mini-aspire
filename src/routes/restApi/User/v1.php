@@ -10,7 +10,7 @@ $restApiVersion = 'user/v1';
 
 
 Route::post($restApiVersion.'/createLoan', [App\Http\Controllers\User\UserControllerV1::class,'CreateLoan']);
-Route::get($restApiVersion.'/viewLoan', [App\Http\Controllers\User\UserControllerV1::class,'ViewLoan']);
+Route::get($restApiVersion.'/viewLoanList', [App\Http\Controllers\User\UserControllerV1::class,'viewLoanList']);
 Route::post($restApiVersion.'/loanPrepayment', [App\Http\Controllers\User\UserControllerV1::class,'LoanPrepayment']);
 
 

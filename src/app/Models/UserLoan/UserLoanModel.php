@@ -1,7 +1,20 @@
 <?php
 
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
- */
+namespace App\Models\UserLoan;
 
+use Illuminate\Database\Eloquent\Model;
+
+class UserLoanModel extends Model
+{
+    protected $table = 'user_loan';
+    protected $fillable = ['user_id', 'loan_amount', 'term'];
+    protected $primaryKey = 'id';
+    
+    
+    public function userPrepayment()
+    {
+         return $this->hasMany('App\Models\LoanPrePayment\LoanPrePaymentModel', 'loan_id', 'id');
+    }
+    
+    
+}
