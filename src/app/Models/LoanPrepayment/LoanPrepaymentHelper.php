@@ -112,7 +112,7 @@ class LoanPrePaymentHelper {
                         ]
                 );
 
-                $remaining_amount -= $amount_deducted;
+                $remaining_amount = round(($remaining_amount - $amount_deducted),4);
                 if ($remaining_amount <= 0) {
                     break;
                 }
