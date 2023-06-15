@@ -6,6 +6,7 @@ use App\Models\UserLoan\UserLoanModel;
 use App\Models\LoanPrePayment\LoanPrePaymentModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
  
 
 class UserLoanHelper {
@@ -177,6 +178,67 @@ class UserLoanHelper {
             
         } catch (\Throwable $e) {
             
+            throw new \Exception($e->getMessage().' line'. $e->getLine());
+        }
+        
+    }
+    
+    
+   
+     /**
+      * Update loan status
+      * @param type $loanStatus
+      * @param type $loanId
+      * @return type
+      * @throws \Exception
+      */
+    public function updateLoanStatus($loanStatus, $loanId){
+        
+        try {
+            /**
+             * Start - Validate parameters
+             */
+            $requestParams = [
+                'loanStatus' => $loanStatus,
+                'loanId' => $loanId
+            ];
+            
+            $rules = [
+                'loanId' => 'required|integer',
+                'loanStatus' => ['required', Rule::in(['APPROVED', "REJECTED"])]
+            ];
+
+            $validator = Validator::make($requestParams, $rules);
+
+
+            if ($validator->fails()) {
+                $errors = $validator->messages();
+                throw new \Exception($errors->all()[0]);
+            }
+            
+            /**
+             * end - validate parameters
+             */
+            
+            
+            $loanObject = UserLoanModel::where('id', $loanId)->first();
+            
+            if(!is_object($loanObject)){
+                throw new \Exception("Loan id does not exist");
+            }
+            
+            if($loanObject->loan_status  != "PENDING"){
+                throw new \Exception("Action already taken");
+            }
+            
+            
+            $loanObject->loan_status = $loanStatus;
+            $loanObject->save();
+            
+            return true;
+            
+        } catch (\Throwable $e) {
+            DB::rollBack();
             throw new \Exception($e->getMessage().' line'. $e->getLine());
         }
         

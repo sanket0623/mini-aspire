@@ -11,6 +11,21 @@ class AdminControllerV1 extends Controller
 {
     public function updateLoanStatus(Request $request){
         
+        try{
+
+            $loanStatus = $request->input('loan_status');
+            $loanId = $request->input('loan_id');
+
+            $loanObject = new UserLoanHelper();
+            $loanObject->updateLoanStatus($loanStatus, $loanId);
+            
+            $data = ['message' => 'updated'];
+            return ApiResponse::returnData(['data' => $data]);
+        } catch (\Throwable $e) {
+            
+            return ApiResponse::returnFailure($e->getMessage().' line'. $e->getLine());
+        }
+        
     }
     
     public function viewLoanList(){
