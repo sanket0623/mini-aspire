@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserLoan\UserLoanHelper;
 use App\Http\Controllers\ApiResponse;
+use App\Models\LoanPrePayment\LoanPrePaymentHelper;
 
 class UserControllerV1 extends Controller
 {
@@ -50,6 +51,22 @@ class UserControllerV1 extends Controller
     
     
     public function LoanPrepayment(Request $request){
+        
+        
+         try{
+
+            $installmentAmount = $request->input('amount_to_be_paid');
+            $loanId = $request->input('loan_id');
+
+            $prepaymentObject = new LoanPrePaymentHelper();
+            $prepaymentObject->LoanPrepayment($loanId, $installmentAmount);
+            
+            $data = ['message' => 'updated'];
+            return ApiResponse::returnData(['data' => $data]);
+        } catch (\Throwable $e) {
+            
+            return ApiResponse::returnFailure($e->getMessage().' line'. $e->getLine());
+        }
         
     }
     

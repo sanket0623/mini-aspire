@@ -125,7 +125,7 @@ class UserLoanHelper {
              * end - validate parameters
              */
             
-            $loanList = UserLoanModel::where('user_id', $userId)->paginate(5);
+            $loanList = UserLoanModel::where('user_id', $userId)->orderBy('id', 'desc')->paginate(5);
             
             $loanData = [];
             
@@ -158,7 +158,7 @@ class UserLoanHelper {
         
         try {
             
-            $loanList = UserLoanModel::paginate(5);
+            $loanList = UserLoanModel::orderBy('id', 'desc')->paginate(5);
             
             $loanData = [];
             
@@ -238,7 +238,6 @@ class UserLoanHelper {
             return true;
             
         } catch (\Throwable $e) {
-            DB::rollBack();
             throw new \Exception($e->getMessage().' line'. $e->getLine());
         }
         

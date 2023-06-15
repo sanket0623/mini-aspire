@@ -8,6 +8,6 @@ class LoanPrePaymentModel extends Model
 {
     protected $table = 'loan_prepayment';
     protected $primaryKey = 'id';
-    protected $fillable = ['loan_id', 'loan_amount', 'term_date'];
+    protected $fillable = ['loan_id', 'loan_amount', 'term_date', 'paid_amount', 'loan_status'];
     
 }
