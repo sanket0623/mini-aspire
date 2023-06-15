@@ -148,4 +148,38 @@ class UserLoanHelper {
         
     }
     
+    /**
+     * View loan list for admin
+     * @return type
+     * @throws \Exception
+     */
+    public function viewLoanListForAdmin(){
+        
+        try {
+            
+            $loanList = UserLoanModel::paginate(5);
+            
+            $loanData = [];
+            
+            foreach($loanList as $list){
+                $loanData[] = [
+                    'loan_id' => $list->id,
+                    'user' => ['name' => $list->user->name, 'email' => $list->user->email],
+                    'loan_amount' => $list->loan_amount,
+                    'term' => $list->term,
+                    'loan_status' => $list->loan_status,
+                    'created_at' => $list->created_at,
+                    'updated_at' => $list->updated_at,
+                    'installment' => $list->userPrepayment->toArray()
+                 ];
+            }
+             return $loanData;
+            
+        } catch (\Throwable $e) {
+            
+            throw new \Exception($e->getMessage().' line'. $e->getLine());
+        }
+        
+    }
+    
 }

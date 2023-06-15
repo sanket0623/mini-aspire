@@ -16,5 +16,12 @@ class UserLoanModel extends Model
          return $this->hasMany('App\Models\LoanPrePayment\LoanPrePaymentModel', 'loan_id', 'id');
     }
     
+    public function user()
+    {
+         return $this->hasOne('App\Models\User\UserModel', 'id', 'user_id');
+    }
+    
+    
+    
     
 }
